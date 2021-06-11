@@ -6,19 +6,32 @@
 
 int create_primary_key(void)
 {
+	/**
+	 * ESYS_TR: Esys TPM Resource
+	 * reference to ESYS_CONTEXT object
+	 */
 	ESYS_TR handle = ESYS_TR_NONE;
-	printf("%d\n", handle);
+	/* unsigned 32bits return values */
 	uint32_t r = 0;
+	/* ESYS_CONTEXT: connection to the TPM */
 	ESYS_CONTEXT *ctx;
 
-	r = Esys_Initialize(&ctx, NULL, NULL);
-	printf("%d\n", r);
+	/*
+	 * Initialize ESYS_CONTEXT
+	 * paras: esys_context, tcti, abiVersion
+	 */
+	if((r = Esys_Initialize(&ctx, NULL, NULL)) != 0) {
+		printf("no TPM found!\n");
+		return 1;
+	}
 
+	/* initialize PK's authentication value */
 	TPM2B_AUTH auth_pk = {
 		.size = 5,
 		.buffer = {1, 2, 3, 4, 5}
 	};
 
+	/* initialize PK's insensitive parameter */
 	TPM2B_SENSITIVE_CREATE in_sensitive_para = {
 		.size = 4,
 		.sensitive = {
@@ -33,8 +46,10 @@ int create_primary_key(void)
 		},
 	};
 
+	/* set authentication values */
 	in_sensitive_para.sensitive.userAuth = auth_pk;
 
+	/* initialize PK's public parameters */
 	TPM2B_PUBLIC public_key_para = {
 		.size = 0,
 		.publicArea = {
@@ -70,15 +85,18 @@ int create_primary_key(void)
 		},
 	};
 
+	/* additional info to be included into key creation data*/
 	TPM2B_DATA additional_info = {
 		.size = 0,
 		.buffer = {},
 	};
 
+	/* PCRs to be included into key creation data */
 	TPML_PCR_SELECTION pcr = {
 		.count = 0,
 	};
 
+	/* variables for command responses */
 	TPM2B_PUBLIC *public;
 	TPM2B_CREATION_DATA *creation_data;
 	TPM2B_DIGEST *hash;
