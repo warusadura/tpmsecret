@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <tss2/tss2_mu.h>
 #include <tss2/tss2_esys.h>
+#include <tss2/tss2_mu.h>
 
 #include "primarykey.h"
 
