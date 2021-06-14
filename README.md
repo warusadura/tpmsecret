@@ -4,7 +4,8 @@ a simple project to work with a TPM.
 
 #### encrypting a file using TPM commands involves the following,
 
-```tpm2_createprimary -c primary.ctx
+```
+tpm2_createprimary -c primary.ctx
 
 tpm2_create -C primary.ctx -G aes256 -u key.pub -r key.priv
 
