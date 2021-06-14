@@ -20,10 +20,9 @@ int create_primary_key(void)
 	 * Initialize ESYS_CONTEXT
 	 * paras: esys_context, tcti, abiVersion
 	 */
-	if((r = Esys_Initialize(&ctx, NULL, NULL)) != 0) {
-		printf("no TPM found!\n");
-		return 1;
-	}
+	r = Esys_Initialize(&ctx, NULL, NULL);
+	if (r != 0)
+		goto error;
 
 	/* initialize PK's authentication value */
 	TPM2B_AUTH auth_pk = {
@@ -125,6 +124,10 @@ int create_primary_key(void)
 	return 0;
 
 error:
+	Esys_Finalize(&ctx);
+	printf("no TPM found!\n");
+	return 1;
+
 	if (handle != ESYS_TR_NONE)
 		if (Esys_FlushContext(ctx, handle) != TSS2_RC_SUCCESS)
 			printf("cleanup failed");
