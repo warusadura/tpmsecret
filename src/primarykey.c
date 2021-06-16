@@ -4,7 +4,7 @@
 
 #include "primarykey.h"
 
-int create_primary_key(void)
+int create_primary_key(ESYS_CONTEXT *ctx)
 {
 	/**
 	 * ESYS_TR: Esys TPM Resource
@@ -13,16 +13,6 @@ int create_primary_key(void)
 	ESYS_TR handle = ESYS_TR_NONE;
 	/* unsigned 32bits return values */
 	uint32_t r = 0;
-	/* ESYS_CONTEXT: connection to the TPM */
-	ESYS_CONTEXT *ctx;
-
-	/*
-	 * Initialize ESYS_CONTEXT
-	 * paras: esys_context, tcti, abiVersion
-	 */
-	r = Esys_Initialize(&ctx, NULL, NULL);
-	if (r != 0)
-		goto error;
 
 	/* initialize PK's authentication value */
 	TPM2B_AUTH auth_pk = {
@@ -124,10 +114,6 @@ int create_primary_key(void)
 	return 0;
 
 error:
-	Esys_Finalize(&ctx);
-	printf("no TPM found!\n");
-	return 1;
-
 	if (handle != ESYS_TR_NONE)
 		if (Esys_FlushContext(ctx, handle) != TSS2_RC_SUCCESS)
 			printf("cleanup failed");
