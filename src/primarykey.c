@@ -4,10 +4,22 @@
 
 #include "primarykey.h"
 
-int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
+int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle)
 {
 	/* unsigned 32bits return values */
 	uint32_t r = 0;
+
+	TPM2B_AUTH auth_value = {
+		.size = 0,
+		.buffer = {}
+	};
+
+	r = Esys_TR_SetAuth(ctx, ESYS_TR_RH_OWNER, &auth_value);
+
+	if (r != TSS2_RC_SUCCESS) {
+		printf("error: Esys_SetAuth!\n");
+		goto error;
+	}
 
 	/* initialize PK's authentication value */
 	TPM2B_AUTH auth_pk = {
@@ -45,8 +57,7 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 				TPMA_OBJECT_DECRYPT |
 				TPMA_OBJECT_FIXEDTPM |
 				TPMA_OBJECT_FIXEDPARENT |
-				TPMA_OBJECT_SENSITIVEDATAORIGIN
-				),
+				TPMA_OBJECT_SENSITIVEDATAORIGIN),
 			.authPolicy = {
 				.size = 0,
 			},
@@ -87,10 +98,9 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 	TPMT_TK_CREATION *ticket;
 
 	r = Esys_CreatePrimary (ctx, ESYS_TR_RH_OWNER, ESYS_TR_PASSWORD,
-				ESYS_TR_NONE, ESYS_TR_NONE,
-				&in_sensitive_para, &public_key_para,
-				&additional_info, &pcr, &handle, &public,
-				&creation_data, &hash, &ticket);
+		ESYS_TR_NONE, ESYS_TR_NONE, &in_sensitive_para,
+		&public_key_para, &additional_info, &pcr, &pr_handle,
+		&public, &creation_data, &hash, &ticket);
 
 	if (r != TSS2_RC_SUCCESS) {
 		printf("error: Esys_CreatePrimary!\n");
@@ -98,20 +108,8 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 	} else
 		printf("a primary key created!\n");
 
-	r = Esys_FlushContext(ctx, handle);
-	if (r != TSS2_RC_SUCCESS) {
-		printf("error: Esys_FlushContext handle\n");
-		goto error;
-	}
-
-	return 0;
+	return r;
 
 error:
-	if (handle != ESYS_TR_NONE)
-		if (Esys_FlushContext(ctx, handle) != TSS2_RC_SUCCESS)
-			printf("cleanup failed");
-
-	if (ctx)
-		Esys_Finalize(&ctx);
 	return 1;
 }

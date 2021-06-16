@@ -7,27 +7,30 @@
 
 int main(int argc, char* argv[])
 {
-	TSS2_RC rc;
-	int ret_pk;
-	int ret_sk;
 	/* ESYS_TR: Esys TPM Resource
 	 * reference to ESYS_CONTEXT object */
-	ESYS_TR handle = ESYS_TR_NONE;
+	ESYS_TR pr_handle = ESYS_TR_NONE;
+	ESYS_TR sk_handle = ESYS_TR_NONE;
+
+	uint32_t r = 0;
+	int ret;
 	/* ESYS_CONTEXT: connection to the TPM */
 	ESYS_CONTEXT *ctx;
 
 	/* Initialize ESYS_CONTEXT
 	 * paras: esys_context, tcti, abiVersion */
-	rc = Esys_Initialize(&ctx, NULL, NULL);
+	r = Esys_Initialize(&ctx, NULL, NULL);
 
-	if (rc != TSS2_RC_SUCCESS)
+	if (r != TSS2_RC_SUCCESS)
 		goto error;
 
-	ret_pk = create_primary_key(ctx, handle);
-	ret_sk = create_secondary_key(ctx, handle);
-	return 0;
+	ret = create_primary_key(ctx, pr_handle);
+	ret = create_secondary_key(ctx, pr_handle, sk_handle);
+
+	return ret;
 
 error:
 	printf("no TPM found!\n");
+	Esys_Finalize(&ctx);
 	return 1;
 }

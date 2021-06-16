@@ -4,7 +4,8 @@
 
 #include "secondarykey.h"
 
-int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
+int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle,
+	ESYS_TR sk_handle)
 {
 	uint32_t r = 0;
 
@@ -72,9 +73,8 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 	TPM2B_CREATION_DATA *creation_data;
 	TPM2B_DIGEST *hash;
 	TPMT_TK_CREATION *ticket;
-	TPM2B_SENSITIVE_DATA *out_data;
 
-	r = Esys_Create(ctx, handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
+	r = Esys_Create(ctx, pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
 		ESYS_TR_NONE, &in_sensitive_para,
 		&public_key_para, &additional_info, &pcr, &private,
 		&public, &creation_data, &hash, &ticket);
@@ -84,6 +84,17 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 		goto error;
 	} else
 		printf("a secondary key created!\n");
+
+	/* load the secondary key
+	r = Esys_Load(ctx, pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
+		ESYS_TR_NONE, private, public, &sk_handle);
+
+	if (r != TSS2_RC_SUCCESS) {
+		printf("error: Esys_Load!\n");
+		goto error;
+	} */
+
+	return r;
 
 error:
 	return 1;
