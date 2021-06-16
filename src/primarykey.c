@@ -104,8 +104,6 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 		goto error;
 	}
 
-	Esys_Finalize(&ctx);
-
 	return 0;
 
 error:
