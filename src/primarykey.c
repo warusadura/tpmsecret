@@ -4,13 +4,8 @@
 
 #include "primarykey.h"
 
-int create_primary_key(ESYS_CONTEXT *ctx)
+int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR handle)
 {
-	/**
-	 * ESYS_TR: Esys TPM Resource
-	 * reference to ESYS_CONTEXT object
-	 */
-	ESYS_TR handle = ESYS_TR_NONE;
 	/* unsigned 32bits return values */
 	uint32_t r = 0;
 

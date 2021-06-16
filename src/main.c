@@ -3,12 +3,16 @@
 #include <tss2/tss2_mu.h>
 
 #include "primarykey.h"
-#include "encrypt.h"
+#include "secondarykey.h"
 
 int main(int argc, char* argv[])
 {
 	TSS2_RC rc;
-	int ret;
+	int ret_pk;
+	int ret_sk;
+	/* ESYS_TR: Esys TPM Resource
+	 * reference to ESYS_CONTEXT object */
+	ESYS_TR handle = ESYS_TR_NONE;
 	/* ESYS_CONTEXT: connection to the TPM */
 	ESYS_CONTEXT *ctx;
 
@@ -19,9 +23,9 @@ int main(int argc, char* argv[])
 	if (rc != TSS2_RC_SUCCESS)
 		goto error;
 
-	//unseal_password_auth(ctx);
-	ret = create_primary_key(ctx);
-	return ret;
+	ret_pk = create_primary_key(ctx, handle);
+	ret_sk = create_secondary_key(ctx, handle);
+	return 0;
 
 error:
 	printf("no TPM found!\n");
