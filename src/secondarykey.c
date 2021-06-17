@@ -22,8 +22,9 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 				.buffer = {0}
 			},
 			.data = {
-				.size = 8,
-				.buffer = {3, 2, 3, 2, 3, 2, 3, 2}
+				.size = 16,
+				.buffer = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+					11, 12, 16}
 			}
 		}
 	};
@@ -33,29 +34,28 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 	TPM2B_PUBLIC public_key_para = {
 		.size = 0,
 		.publicArea = {
-			.type = TPM2_ALG_KEYEDHASH,
+			.type = TPM2_ALG_SYMCIPHER,
 			.nameAlg = TPM2_ALG_SHA256,
 			.objectAttributes = (
 				TPMA_OBJECT_USERWITHAUTH |
+				TPMA_OBJECT_SIGN_ENCRYPT |
 				TPMA_OBJECT_FIXEDTPM |
-				TPMA_OBJECT_FIXEDPARENT),
+				TPMA_OBJECT_FIXEDPARENT |
+				TPMA_OBJECT_DECRYPT),
 			.authPolicy = {
 				.size = 0,
 			},
-			.parameters.keyedHashDetail = {
-				.scheme = {
-					.scheme = TPM2_ALG_NULL,
-					.details = {
-						.hmac = {
-							.hashAlg = TPM2_ALG_SHA256
-						}
-					}
+			.parameters.symDetail = {
+				.sym = {
+					.algorithm = TPM2_ALG_AES,
+					.keyBits = {.aes = 128},
+					.mode = {.aes = TPM2_ALG_CFB}
 				}
 			},
-			.unique.keyedHash = {
+			.unique.sym = {
 				.size = 0,
 				.buffer = {}
-			},
+			}
 		}
 	};
 
@@ -83,16 +83,25 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 		printf("error: Esys_Create!\n");
 		goto error;
 	} else
-		printf("a secondary key created!\n");
+		printf("a secondary AES key created!\n");
 
-	/* load the secondary key
-	r = Esys_Load(ctx, pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
-		ESYS_TR_NONE, private, public, &sk_handle);
+	/* load the secondary key */
+	r = Esys_Load(ctx, *pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
+		ESYS_TR_NONE, private, public, sk_handle);
 
 	if (r != TSS2_RC_SUCCESS) {
 		printf("error: Esys_Load!\n");
 		goto error;
-	} */
+	} else
+		printf("AES key loaded!\n");
+
+	/* authorize loaded key */
+	r = Esys_TR_SetAuth(ctx, *sk_handle, &auth_sk);
+
+	if (r != TSS2_RC_SUCCESS) {
+		printf("error: Esys_SetAuth!\n");
+		goto error;
+	}
 
 	return r;
 

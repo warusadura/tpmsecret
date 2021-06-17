@@ -108,6 +108,13 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 	} else
 		printf("a primary key created!\n");
 
+	r = Esys_TR_SetAuth(ctx, *pr_handle, &auth_pk);
+
+	if (r != TSS2_RC_SUCCESS) {
+		printf("error: Esys_SetAuth!\n");
+		goto error;
+	}
+
 	return r;
 
 error:
