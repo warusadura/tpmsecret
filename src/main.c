@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
 	if (r != TSS2_RC_SUCCESS)
 		goto error;
 
-	ret = create_primary_key(ctx, pr_handle);
-	ret = create_secondary_key(ctx, pr_handle, sk_handle);
+	ret = create_primary_key(ctx, &pr_handle);
+	ret = create_secondary_key(ctx, &pr_handle, &sk_handle);
 
 	return ret;
 

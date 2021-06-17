@@ -4,8 +4,8 @@
 
 #include "secondarykey.h"
 
-int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle,
-	ESYS_TR sk_handle)
+int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
+	ESYS_TR *sk_handle)
 {
 	uint32_t r = 0;
 
@@ -74,7 +74,7 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle,
 	TPM2B_DIGEST *hash;
 	TPMT_TK_CREATION *ticket;
 
-	r = Esys_Create(ctx, pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
+	r = Esys_Create(ctx, *pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
 		ESYS_TR_NONE, &in_sensitive_para,
 		&public_key_para, &additional_info, &pcr, &private,
 		&public, &creation_data, &hash, &ticket);

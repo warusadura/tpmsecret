@@ -4,7 +4,7 @@
 
 #include "primarykey.h"
 
-int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle)
+int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 {
 	/* unsigned 32bits return values */
 	uint32_t r = 0;
@@ -99,7 +99,7 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR pr_handle)
 
 	r = Esys_CreatePrimary (ctx, ESYS_TR_RH_OWNER, ESYS_TR_PASSWORD,
 		ESYS_TR_NONE, ESYS_TR_NONE, &in_sensitive_para,
-		&public_key_para, &additional_info, &pcr, &pr_handle,
+		&public_key_para, &additional_info, &pcr, pr_handle,
 		&public, &creation_data, &hash, &ticket);
 
 	if (r != TSS2_RC_SUCCESS) {

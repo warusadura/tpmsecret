@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 LDFLAGS = -ltss2-esys
 OBJECTFILES = src/primarykey.o src/secondarykey.o src/main.o
 TARGET = build/tpmsecret
