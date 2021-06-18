@@ -1,2 +1,4 @@
 build
 src/*.o
+cipher_text
+plain_text
