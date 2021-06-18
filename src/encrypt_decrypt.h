@@ -1,2 +1,4 @@
-int encrypt_data(ESYS_CONTEXT *, ESYS_TR);
-int decrypt_data(ESYS_CONTEXT *, ESYS_TR);
+int encrypt_data(ESYS_CONTEXT *, ESYS_TR, TPM2B_IV *,
+	TPM2B_MAX_BUFFER *, TPMI_YES_NO);
+int decrypt_data(ESYS_CONTEXT *, ESYS_TR, TPM2B_IV *,
+	TPM2B_MAX_BUFFER *, TPMI_YES_NO);

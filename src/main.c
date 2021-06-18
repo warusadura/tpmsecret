@@ -12,6 +12,8 @@ int main(int argc, char* argv[])
 	 * reference to ESYS_CONTEXT object */
 	ESYS_TR pr_handle = ESYS_TR_NONE;
 	ESYS_TR sk_handle = ESYS_TR_NONE;
+	/* boolean type */
+	TPMI_YES_NO encrypt_decrypt;
 
 	uint32_t r = 0;
 	int ret;
@@ -28,9 +30,23 @@ int main(int argc, char* argv[])
 	ret = create_primary_key(ctx, &pr_handle);
 	ret = create_secondary_key(ctx, &pr_handle, &sk_handle);
 
-	////////////////////
+	/* encrypt_decrypt */
 
-	ret = encrypt_data(ctx, sk_handle);
+	/* for passing an initial value for AES to or from the TPM */
+	TPM2B_IV iv_in = {
+		.size = 16,
+		.buffer = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16}
+	};
+
+	/* sized buffer that can hold data */
+	TPM2B_MAX_BUFFER in_data = {
+		.size = 16,
+		.buffer = "hello world!"
+	};
+
+	encrypt_decrypt = TPM2_NO;
+
+	ret = encrypt_data(ctx, sk_handle, &iv_in, &in_data, encrypt_decrypt);
 
 	return ret;
 
