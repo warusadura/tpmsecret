@@ -2,6 +2,7 @@
 #include <tss2/tss2_esys.h>
 #include <tss2/tss2_mu.h>
 
+#include "encrypt_decrypt.h"
 #include "primarykey.h"
 #include "secondarykey.h"
 
@@ -26,6 +27,10 @@ int main(int argc, char* argv[])
 
 	ret = create_primary_key(ctx, &pr_handle);
 	ret = create_secondary_key(ctx, &pr_handle, &sk_handle);
+
+	////////////////////
+
+	ret = encrypt_data(ctx, sk_handle);
 
 	return ret;
 

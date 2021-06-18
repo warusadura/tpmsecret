@@ -1,7 +1,7 @@
-CC = gcc
+CC = clang
 CFLAGS = -Wall -g
 LDFLAGS = -ltss2-esys
-OBJECTFILES = src/primarykey.o src/secondarykey.o src/main.o
+OBJECTFILES = src/primarykey.o src/secondarykey.o src/encrypt_decrypt.o src/main.o
 TARGET = build/tpmsecret
 
 all: $(TARGET)
