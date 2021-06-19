@@ -13,7 +13,8 @@ int main(int argc, char* argv[])
 	ESYS_TR pr_handle = ESYS_TR_NONE;
 	ESYS_TR sk_handle = ESYS_TR_NONE;
 	/* boolean type */
-	TPMI_YES_NO encrypt_decrypt;
+	TPMI_YES_NO encrypt = TPM2_NO;
+	TPMI_YES_NO decrypt = TPM2_YES;
 
 	uint32_t r = 0;
 	int ret;
@@ -31,11 +32,9 @@ int main(int argc, char* argv[])
 	ret = create_secondary_key(ctx, &pr_handle, &sk_handle);
 
 	/* encrypt_decrypt */
-	encrypt_decrypt = TPM2_NO;
 
-	ret = encrypt_data(ctx, sk_handle, encrypt_decrypt);
-	encrypt_decrypt = TPM2_YES;
-	ret = decrypt_data(ctx, sk_handle, encrypt_decrypt);
+	ret = encrypt_data(ctx, sk_handle, encrypt);
+	ret = decrypt_data(ctx, sk_handle, decrypt);
 
 	return ret;
 

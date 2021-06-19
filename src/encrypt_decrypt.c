@@ -32,6 +32,8 @@ int encrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO encrypt)
 		//goto error;
 	}
 	fread(in_data.buffer, sizeof(char), BUFF_SIZE, secret_data);
+	printf("%s", in_data.buffer);
+	fclose(secret_data);
 
 	r = Esys_EncryptDecrypt2(ctx, sk_handle, ESYS_TR_PASSWORD,
 		ESYS_TR_NONE, ESYS_TR_NONE, &in_data, encrypt, mode,
@@ -41,15 +43,15 @@ int encrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO encrypt)
 		printf("error: Esys_EncryptDecrypt2!\n");
 	}
 
-	cipher_text = fopen("cipher_text", "w");
+	cipher_text = fopen("cipher_text", "wb");
 	if (!cipher_text) {
 		printf("error: ");
 	}
 
-	fprintf(cipher_text, "%s\n", out_data->buffer);
-
 	printf("%s\n", out_data->buffer);
+	fwrite(out_data->buffer, 1, BUFF_SIZE, cipher_text);
 
+	fclose(cipher_text);
 	return r;
 }
 
@@ -71,11 +73,12 @@ int decrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO decrypt)
 		.size = 16
 	};
 
-	cipher_text = fopen("cipher_text", "r");
+	cipher_text = fopen("cipher_text", "rb");
 	if (!cipher_text) {
 		printf("error: reading cipher_text!\n");
 	}
 	fread(in_data.buffer, 1, BUFF_SIZE, cipher_text);
+	fclose(cipher_text);
 
 	r = Esys_EncryptDecrypt2(ctx, sk_handle, ESYS_TR_PASSWORD,
 		ESYS_TR_NONE, ESYS_TR_NONE, &in_data, decrypt, mode,
@@ -89,7 +92,9 @@ int decrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO decrypt)
 	if (!plain_text) {
 		printf("error: ");
 	}
-	fprintf(plain_text, "%s\n", out_data->buffer);
+	fwrite(out_data->buffer, sizeof(char), BUFF_SIZE, plain_text);
+	fclose(plain_text);
+
 	printf("%s\n", out_data->buffer);
 
 	return r;
