@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	TPMI_YES_NO encrypt = TPM2_NO;
 	TPMI_YES_NO decrypt = TPM2_YES;
 
-	uint32_t r = 0;
+	int r = 0;
 	int ret;
 	/* ESYS_CONTEXT: connection to the TPM */
 	ESYS_CONTEXT *ctx;

@@ -31,6 +31,7 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 
 	in_sensitive_para.sensitive.userAuth = auth_sk;
 
+	/* The public area of the resource/key */
 	TPM2B_PUBLIC public_key_para = {
 		.size = 0,
 		.publicArea = {
@@ -85,7 +86,11 @@ int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 	} else
 		printf("a secondary AES key created!\n");
 
-	/* load the secondary key */
+	/* Esys_Load
+	 * load objects into the TPM
+	 * creates a new ESYS_TR object to hold information about
+	 * the loaded object.
+	 * load the secondary key */
 	r = Esys_Load(ctx, *pr_handle, ESYS_TR_PASSWORD, ESYS_TR_NONE,
 		ESYS_TR_NONE, private, public, sk_handle);
 

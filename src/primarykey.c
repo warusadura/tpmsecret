@@ -6,17 +6,16 @@
 
 int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 {
-	/* unsigned 32bits return values */
-	uint32_t r = 0;
+	int ret = 0;
 
 	TPM2B_AUTH auth_value = {
 		.size = 0,
 		.buffer = {}
 	};
 
-	r = Esys_TR_SetAuth(ctx, ESYS_TR_RH_OWNER, &auth_value);
+	ret = Esys_TR_SetAuth(ctx, ESYS_TR_RH_OWNER, &auth_value);
 
-	if (r != TSS2_RC_SUCCESS) {
+	if (ret != TSS2_RC_SUCCESS) {
 		printf("error: Esys_SetAuth!\n");
 		goto error;
 	}
@@ -97,25 +96,30 @@ int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 	TPM2B_DIGEST *hash;
 	TPMT_TK_CREATION *ticket;
 
-	r = Esys_CreatePrimary (ctx, ESYS_TR_RH_OWNER, ESYS_TR_PASSWORD,
+	/* Esys_CreatePrimary
+	 * creates a new ESYS_TR object to hold information about the
+	 * new primary object. */
+	ret = Esys_CreatePrimary (ctx, ESYS_TR_RH_OWNER, ESYS_TR_PASSWORD,
 		ESYS_TR_NONE, ESYS_TR_NONE, &in_sensitive_para,
 		&public_key_para, &additional_info, &pcr, pr_handle,
 		&public, &creation_data, &hash, &ticket);
 
-	if (r != TSS2_RC_SUCCESS) {
+	if (ret != TSS2_RC_SUCCESS) {
 		printf("error: Esys_CreatePrimary!\n");
 		goto error;
 	} else
 		printf("a primary key created!\n");
 
-	r = Esys_TR_SetAuth(ctx, *pr_handle, &auth_pk);
+	/* Esys_TR_SetAuth()
+	 * sets authorization value for a resource */
+	ret = Esys_TR_SetAuth(ctx, *pr_handle, &auth_pk);
 
-	if (r != TSS2_RC_SUCCESS) {
+	if (ret != TSS2_RC_SUCCESS) {
 		printf("error: Esys_SetAuth!\n");
 		goto error;
 	}
 
-	return r;
+	return ret;
 
 error:
 	return 1;
