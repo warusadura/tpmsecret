@@ -4,6 +4,7 @@
 
 #include "encrypt_decrypt.h"
 #include "primarykey.h"
+#include "random.h"
 #include "secondarykey.h"
 
 int main(int argc, char* argv[])
@@ -15,6 +16,7 @@ int main(int argc, char* argv[])
 	/* boolean type */
 	TPMI_YES_NO encrypt = TPM2_NO;
 	TPMI_YES_NO decrypt = TPM2_YES;
+	TPM2B_DIGEST random_bytes;
 
 	uint32_t ret;
 	/* ESYS_CONTEXT: connection to the TPM */
@@ -34,6 +36,8 @@ int main(int argc, char* argv[])
 
 	ret = encrypt_data(ctx, sk_handle, encrypt);
 	ret = decrypt_data(ctx, sk_handle, decrypt);
+
+	random_bytes = generate_random_bytes(ctx);
 
 	return (int)ret;
 

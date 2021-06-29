@@ -6,7 +6,7 @@
 
 uint32_t create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 {
-	int ret = 0;
+	uint32_t ret = 0;
 
 	TPM2B_AUTH auth_value = {
 		.size = 0,
