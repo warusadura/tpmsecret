@@ -4,7 +4,7 @@
 
 #include "primarykey.h"
 
-int create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
+uint32_t create_primary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle)
 {
 	int ret = 0;
 

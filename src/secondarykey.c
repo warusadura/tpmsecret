@@ -4,7 +4,7 @@
 
 #include "secondarykey.h"
 
-int create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
+uint32_t create_secondary_key(ESYS_CONTEXT *ctx, ESYS_TR *pr_handle,
 	ESYS_TR *sk_handle)
 {
 	uint32_t r = 0;

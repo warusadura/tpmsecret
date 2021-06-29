@@ -16,16 +16,15 @@ int main(int argc, char* argv[])
 	TPMI_YES_NO encrypt = TPM2_NO;
 	TPMI_YES_NO decrypt = TPM2_YES;
 
-	int r = 0;
-	int ret;
+	uint32_t ret;
 	/* ESYS_CONTEXT: connection to the TPM */
 	ESYS_CONTEXT *ctx;
 
 	/* Initialize ESYS_CONTEXT
 	 * paras: esys_context, tcti, abiVersion */
-	r = Esys_Initialize(&ctx, NULL, NULL);
+	ret = Esys_Initialize(&ctx, NULL, NULL);
 
-	if (r != TSS2_RC_SUCCESS)
+	if (ret != TSS2_RC_SUCCESS)
 		goto error;
 
 	ret = create_primary_key(ctx, &pr_handle);
@@ -36,7 +35,7 @@ int main(int argc, char* argv[])
 	ret = encrypt_data(ctx, sk_handle, encrypt);
 	ret = decrypt_data(ctx, sk_handle, decrypt);
 
-	return ret;
+	return (int)ret;
 
 error:
 	printf("no TPM found!\n");

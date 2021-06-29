@@ -4,9 +4,8 @@
 
 #include "encrypt_decrypt.h"
 
-#define BUFF_SIZE 16
-
-int encrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO encrypt)
+uint32_t encrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO
+		      encrypt)
 {
 	uint32_t r = 0;
 	FILE *secret_data = NULL;
@@ -55,7 +54,8 @@ int encrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO encrypt)
 	return r;
 }
 
-int decrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO decrypt)
+uint32_t decrypt_data(ESYS_CONTEXT *ctx, ESYS_TR sk_handle, TPMI_YES_NO
+	              decrypt)
 {
 	uint32_t r = 0;
 	FILE *cipher_text = NULL;
