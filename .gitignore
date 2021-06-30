@@ -2,3 +2,4 @@ build
 src/*.o
 cipher_text
 plain_text
+src/main_old.c

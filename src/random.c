@@ -14,6 +14,6 @@ TPM2B_DIGEST generate_random_bytes(ESYS_CONTEXT *ctx)
 		printf("error: Esys_GetRandom!\n");
 		return *random_bytes;
 	}
-	printf("%o\n", *random_bytes);
+	/* printf("%o\n", *random_bytes); */
 	return *random_bytes;
 }
