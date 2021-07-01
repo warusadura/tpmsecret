@@ -92,12 +92,16 @@ egg_tpm2_generate_primary_key(void)
 	return TRUE;
 }
 
-gboolean
+GBytes *
 egg_tpm2_generate_master_password()
 {
 	/* master password generation */
 	uint32_t ret = 0;
 	TPM2B_DIGEST *random_bytes = NULL;
+	FILE *processed_key_file = NULL;
+	TPM2B_MAX_BUFFER *out_data = NULL;
+	TPM2B_IV *iv_out = NULL;
+	TPMI_ALG_SYM_MODE mode = TPM2_ALG_NULL;
 
 	ret = Esys_GetRandom(ctx, ESYS_TR_NONE, ESYS_TR_NONE, ESYS_TR_NONE,
 		64, &random_bytes);
@@ -111,7 +115,14 @@ egg_tpm2_generate_master_password()
 
 	/* master password encrypting */
 
+	TPM2B_IV iv_in = {
+		.size = 64,
+	};
 
+	/* sized buffer that can hold data */
+	TPM2B_MAX_BUFFER in_data = {
+		.size = 64,
+	};
 
-	return TRUE;
+	return NULL;
 }
