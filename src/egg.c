@@ -3,7 +3,7 @@
 static ESYS_CONTEXT *ctx;
 ESYS_TR pr_handle = ESYS_TR_NONE;
 
-gboolean
+static gboolean
 egg_tpm2_generate_primary_key(void)
 {
 	uint32_t ret = 0;
@@ -93,7 +93,7 @@ egg_tpm2_generate_primary_key(void)
 }
 
 GBytes *
-egg_tpm2_generate_master_password()
+egg_tpm2_generate_master_password(GBytes *input, GError *error)
 {
 	/* master password generation */
 	uint32_t ret = 0;
