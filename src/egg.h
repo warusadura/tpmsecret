@@ -9,6 +9,6 @@
 gboolean egg_tpm2_generate_primary_key      (void);
 GBytes   *egg_tpm2_generate_master_password (void);
 gboolean egg_tpm2_encrypt_master_password   (GBytes *);
-GBytes   *egg_tpm2_retrieve_master_password (GBytes *);
+GBytes   *egg_tpm2_retrieve_master_password (void);
 
 #endif
